@@ -5,7 +5,7 @@ console.log(galleryItems);
 
 const galleryEl = document.querySelector(".gallery");
 
-const galleryM = createGalleryM(galleryItems);
+const galleryM = createGalleryM(galleryM);
 
 
 function createGalerryM(gallery) {
@@ -18,8 +18,8 @@ function createGalerryM(gallery) {
                 <img
                 class="gallery__image"
                 src="${preview}"
-                data-source="${original}"
                 alt="${description}"
+                data-source="${original}"
                 />
         </a>
         </div>`;
@@ -29,4 +29,29 @@ function createGalerryM(gallery) {
 
 galleryEl.addEventListener('click', onImageClick);
 
-functio.addEventListener('click', onImgClick);
+function onImageClick(event) {
+    event.preventDefault();
+
+    if (event.target.nodeName !== 'IMG') {
+        return;
+    }
+
+    const imageUrl = event.target.dataset.source;
+
+    instanceLightBox = basicLightbox.create(`<img src="${imageUrl}"/>`, {
+        onShow: () => (event.target.src = imageUrl),
+    });
+
+    instanceLightBox.show();
+
+    window.addEventListener('keydown', onEscapeKeydown);
+}
+
+function onEscapeKeydown(event) {
+    const ESC_KEY_CODE = 'Escape';
+    const isEscadeCode = event.code === ESC_KEY_CODE;
+
+    if (instanceLightBox.visible() && isEscapeCode) {
+        instanceLightBox.close(() => window.removeEventListener('keydown', onEscapeKeydown));
+    }
+}
